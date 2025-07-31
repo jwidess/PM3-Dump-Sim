@@ -8,7 +8,7 @@ More info on running Proxmark3 on Android can be found here: https://github.com/
 ![Example Images](https://github.com/jwidess/PM3-Dump-Sim/blob/main/example.jpg?raw=true)
 
 ## If `eview` is empty:
-If you are using a Proxmark3 Easy and attempt to use this script and `hf mfu eview` shows all blank blocks, theres a good chance your flashed firmware does not have the `PLATFORM_EXTRAS=FLASH` parameter enabled. To verify this check the section below. If this is the case, you will need to clone and compile the firmware on a PC (or rooted android phone) and then change the `Makefile.platform` file to include `PLATFORM_EXTRAS=FLASH`. Then you will need to compile and upload this version of the firmware to your Proxmark3 Easy for `hf mfu eload` and thus `eview` to work. 
+If you are using a Proxmark3 Easy and attempt to use this script and `hf mfu eview` shows all blank blocks, theres a good chance your flashed firmware does not have the `PLATFORM_EXTRAS=FLASH` parameter set which results in `hf mfu eload` failing silently. To verify this check, the section below. If this is the case, you will need to clone the PM3 repo on a PC (or rooted android phone) and then change the `Makefile.platform` file to include `PLATFORM_EXTRAS=FLASH`. Then you will need to compile and upload this version of the firmware to your Proxmark3 Easy for `hf mfu eload` and thus `eview` to work. 
 
 ### Check for external flash:
 If your Proxmark3 has external flash enabled, you will see the following line under `[ Model ]`. If you do not see this line, you need to recompile and flash as described above.

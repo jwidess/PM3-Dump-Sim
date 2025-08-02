@@ -1,4 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/bash
+############################################################
+# PM3-Dump-Sim: Proxmark3 MIFARE Ultralight Dump & Emulate #
+# Author: Jwidess                                          #
+# Automates dumping and emulating MFU NFC cards using      #
+# Proxmark3 Easy in Termux.                                #
+#                                                          #
+# Usage: Run in Termux with Proxmark3 client set up.       #
+# See README.md for details and troubleshooting.           #
+############################################################
 
 # ANSI color codes
 RED='\033[0;31m'

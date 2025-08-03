@@ -52,7 +52,7 @@ echo -e "${BLUE}[*] Dumping card...${NC}\n"
 if [[ -z "$DUMP_FILE" ]]; then
   proxmark3 tcp:localhost:8080 -c "hf mfu dump"
   DUMP_FILE=$(ls -t ~/hf-mfu-*-dump*.bin 2>/dev/null | head -n 1)
-  # Remove the corresponding .json file if it exists, but never the .bin file
+  # Remove the corresponding .json file if it exists
   if [[ -n "$DUMP_FILE" ]]; then
     JSON_FILE="${DUMP_FILE%.bin}.json"
     if [[ -f "$JSON_FILE" ]]; then
@@ -77,6 +77,24 @@ fi
 echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}[*] Loading dump file '$DUMP_FILE' into emulator...${NC}\n"
 proxmark3 tcp:localhost:8080 -c "hf mfu eload -f $DUMP_FILE -v"
+
+echo -e "${BLUE}========================================${NC}"
+echo -e "${BLUE}[*] Moving dump file to ~/dumps/...${NC}"
+# Only move if the file exists and is in home, and not already in ~/dumps
+if [[ -f "$DUMP_FILE" ]]; then
+  DUMPS_DIR="$HOME/dumps"
+  mkdir -p "$DUMPS_DIR"
+  BASENAME=$(basename "$DUMP_FILE")
+  # Only move if not already in dumps dir
+  if [[ "$DUMP_FILE" != "$DUMPS_DIR/"* ]]; then
+    mv "$DUMP_FILE" "$DUMPS_DIR/$BASENAME"
+    echo -e "${GREEN}[*] Dump file moved to $DUMPS_DIR/$BASENAME${NC}"
+  else
+    echo -e "${YELLOW}[*] Dump file already in $DUMPS_DIR${NC}"
+  fi
+else
+  echo -e "${RED}[!] Dump file '$DUMP_FILE' not found, nothing moved.${NC}"
+fi
 
 echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}[*] Reading memory with eview...${NC}\n"

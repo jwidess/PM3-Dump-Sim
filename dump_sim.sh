@@ -23,7 +23,12 @@ DUMP_FILE=""
 while getopts ":f:" opt; do
   case $opt in
     f)
-      DUMP_FILE="$OPTARG"
+      # If the provided file is not an absolute path, prepend home dir
+      if [[ "$OPTARG" = /* ]]; then
+        DUMP_FILE="$OPTARG"
+      else
+        DUMP_FILE="$HOME/$OPTARG"
+      fi
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -47,6 +52,13 @@ echo -e "${BLUE}[*] Dumping card...${NC}\n"
 if [[ -z "$DUMP_FILE" ]]; then
   proxmark3 tcp:localhost:8080 -c "hf mfu dump"
   DUMP_FILE=$(ls -t ~/hf-mfu-*-dump*.bin 2>/dev/null | head -n 1)
+  # Remove the corresponding .json file if it exists, but never the .bin file
+  if [[ -n "$DUMP_FILE" ]]; then
+    JSON_FILE="${DUMP_FILE%.bin}.json"
+    if [[ -f "$JSON_FILE" ]]; then
+      rm -f "$JSON_FILE"
+    fi
+  fi
   if [[ -z "$DUMP_FILE" ]]; then
     echo -e "${RED}========================================${NC}"
     echo -e "${RED}[!] No dump file found.${NC}"
@@ -65,7 +77,6 @@ fi
 echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}[*] Loading dump file '$DUMP_FILE' into emulator...${NC}\n"
 proxmark3 tcp:localhost:8080 -c "hf mfu eload -f $DUMP_FILE -v"
-#rm -f "$DUMP_FILE" "${DUMP_FILE%.bin}.json"
 
 echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}[*] Reading memory with eview...${NC}\n"

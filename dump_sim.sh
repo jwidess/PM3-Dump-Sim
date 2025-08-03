@@ -65,7 +65,7 @@ fi
 echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}[*] Loading dump file '$DUMP_FILE' into emulator...${NC}\n"
 proxmark3 tcp:localhost:8080 -c "hf mfu eload -f $DUMP_FILE -v"
-rm -f "$DUMP_FILE" "${DUMP_FILE%.bin}.json"
+#rm -f "$DUMP_FILE" "${DUMP_FILE%.bin}.json"
 
 echo -e "${BLUE}========================================${NC}"
 echo -e "${BLUE}[*] Reading memory with eview...${NC}\n"

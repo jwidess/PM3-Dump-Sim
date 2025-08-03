@@ -23,11 +23,11 @@ DUMP_FILE=""
 while getopts ":f:" opt; do
   case $opt in
     f)
-      # If the provided file is not an absolute path, prepend home dir
+      # If the provided file is not an absolute path, prepend ~/dumps dir
       if [[ "$OPTARG" = /* ]]; then
         DUMP_FILE="$OPTARG"
       else
-        DUMP_FILE="$HOME/$OPTARG"
+        DUMP_FILE="$HOME/dumps/$OPTARG"
       fi
       ;;
     \?)
@@ -48,7 +48,7 @@ echo -e "${YELLOW}Ready card and submit Enter to begin...${NC}"
 read
 
 echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}[*] Dumping card...${NC}\n"
+echo -e "${BLUE}[*] Dumping or loading card...${NC}\n"
 if [[ -z "$DUMP_FILE" ]]; then
   proxmark3 tcp:localhost:8080 -c "hf mfu dump"
   DUMP_FILE=$(ls -t ~/hf-mfu-*-dump*.bin 2>/dev/null | head -n 1)
